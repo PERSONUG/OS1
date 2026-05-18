@@ -1,5 +1,5 @@
 # ChangeThis OS
-ChangeThis OS is an open-souce kernel OS developed by PERSONUG. It contains all the files you need to create a boitable operating system kernel.
+ChangeThis OS is an open-souce kernel OS developed by PERSONUG. It contains all the files you need to create a bootable operating system kernel.
 
 
 
