@@ -1,16 +1,30 @@
 void kernel_main(void) {
-    // 0xB8000 is the memory address where the graphics card looks for text to display.
-    // 'volatile' tells the compiler not to optimize this away, because we are talking to physical hardware.
-    volatile char* video_memory = (volatile char*) 0xB8000;
+    // 0xA0000 is the memory address for VGA Graphics Mode pixels
+    unsigned char* screen = (unsigned char*) 0xA0000;
 
-    // The message we want to display on our custom OS
-    const char* message = "ChangeThis OS - Make it your own!";
+    // Note: To truly switch modes, we usually need "Real Mode" or "VBE".
+    // For now, let's simulate a UI layout in the current mode 
+    // by drawing a "Window" using extended ASCII characters
+
+    char* video_memory = (char*) 0xB8000;
     
-    // Each character on screen takes up 2 bytes of memory:
-    // Byte 1: The ASCII character code (e.g., 'H')
-    // Byte 2: The color attribute (0x0A means light green text on a black background)
-    for(int i = 0; message[i] != '\0'; i++) {
-        video_memory[i * 2] = message[i];       // Write the character text
-        video_memory[i * 2 + 1] = 0x0A;         // Write the green color style
+    // Clear screen with a Dark Grey background
+    for (int i = 0; i < 80 * 25 * 2; i += 2) {
+        video_memory[i] = ' ';
+        video_memory[i+1] = 0x88; 
+    }
+
+    // Draw a "Window" Box (A White rectangle in the middle)
+    int start_x = 20;
+    int start_y = 5;
+    int width = 40;
+    int height = 15;
+
+    for (int y = start_y; y < start_y + height; y++) {
+        for (int x = start_x; x < start_x + width; x++) {
+            int offset = (y * 80 + x) * 2;
+            video_memory[offset] = ' ';
+            video_memory[offset + 1] = 0xF0; // White background, Black text
+        }
     }
 }
